@@ -6,6 +6,7 @@ import "izitoast/dist/css/iziToast.min.css";
 
 const form = document.querySelector('form.form')
 const ulGallery = document.querySelector('ul.gallery')
+const liSize = document.querySelector('li.li')
 const loadMoreBtn = document.querySelector('button.load-more')
 
 let inputText
@@ -44,8 +45,9 @@ form.addEventListener('submit', async e => {
             message: "We're sorry, but you've reached the end of search results."
         })
         
-    }
-            showLoadMoreButton()
+    } else {
+                showLoadMoreButton()
+            }
         } catch (err) {
             console.log(err);
             iziToast.error({
@@ -68,11 +70,10 @@ loadMoreBtn.addEventListener('click', async e => {
         const res = await getImagesByQuery(inputText, page)
         const data = res
         const gallery = createGallery(data.hits, false)
-        const scrollLength = ulGallery.getBoundingClientRect()
-console.log(scrollLength);
+        const scrollLength = liSize.getBoundingClientRect()
 
         window.scrollBy({
-        top: scrollLength.bottom / 3.7,
+        top: scrollLength.height * 2,
         behavior: "smooth"
         })
         const PER_PAGE = 15
@@ -81,6 +82,7 @@ console.log(scrollLength);
         iziToast.show({
             message: "We're sorry, but you've reached the end of search results."
         })
+        hideLoadMoreButton()
     } else {
             showLoadMoreButton()
         }
