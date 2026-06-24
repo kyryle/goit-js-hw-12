@@ -7,7 +7,6 @@ const span = document.querySelector("span")
 const loadMoreBtn = document.querySelector('button.load-more')
 
 
-
 export function createGallery(images) {
 function imageTemplate({webformatURL, largeImageURL, tags, likes, views, comments, downloads}) {
   return `
