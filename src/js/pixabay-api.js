@@ -1,7 +1,7 @@
 import axios, { isCancel, AxiosError } from "axios";
 
 
-export async function getImagesByQuery(query, pageNumber) {
+export async function getImagesByQuery(query, page) {
     const baseUrl = 'https://pixabay.com';
     const endPoint = '/api/';
     const params = new URLSearchParams({
@@ -11,7 +11,7 @@ export async function getImagesByQuery(query, pageNumber) {
         orientation: "horizontal",
         safesearch: "true",
         per_page: 15,
-        page: `${pageNumber}`
+        page: page,
     })
     const url = `${baseUrl}${endPoint}?${params}`;
     const response = await axios.get(url);

@@ -12,7 +12,7 @@ let page
 
 form.addEventListener('submit', async e => {
     e.preventDefault();
-    let page = 1
+    page = 1
     const data = new FormData(form)
     inputText = data.get('search-text')
     if (inputText.trim() === "") {
@@ -24,7 +24,7 @@ form.addEventListener('submit', async e => {
         clearGallery()
         showLoader()
         try {
-        const res = await getImagesByQuery(inputText)
+        const res = await getImagesByQuery(inputText, page)
             const data = res
             
             if (res.hits.length === 0) {
@@ -51,9 +51,15 @@ form.addEventListener('submit', async e => {
 loadMoreBtn.addEventListener('click', async e => {
     hideLoadMoreButton()
     e.preventDefault();
-    let page =+ 1
+    page += 1
     const res = await getImagesByQuery(inputText, page)
     const data = res
     const gallery = createGallery(data.hits)
-    showLoadMoreButton()
+    let pageCheck = 15 * page
+    if (data.totalhits < Math.ceil(pageCheck)) {
+        iziToast.show({
+            message: "We're sorry, but you've reached the end of search results."
+        })
+    } else {
+    showLoadMoreButton()}
 })
