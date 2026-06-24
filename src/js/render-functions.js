@@ -40,7 +40,7 @@ function imageTemplate({webformatURL, largeImageURL, tags, likes, views, comment
   function imagesTemplate(images) {
   return images.map(imageTemplate).join('')
 }
-    if(!replace === false) {
+    if(replace === true) {
         ulGallery.innerHTML = ""
     }
     ulGallery.insertAdjacentHTML("beforeend", imagesTemplate(images))

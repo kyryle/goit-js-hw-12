@@ -6,7 +6,6 @@ import "izitoast/dist/css/iziToast.min.css";
 
 const form = document.querySelector('form.form')
 const ulGallery = document.querySelector('ul.gallery')
-const liSize = document.querySelector('li.li')
 const loadMoreBtn = document.querySelector('button.load-more')
 
 let inputText
@@ -63,6 +62,7 @@ form.addEventListener('submit', async e => {
 
 loadMoreBtn.addEventListener('click', async e => {
     try {
+        const liSize = document.querySelector('li.li')
         showLoader()
         hideLoadMoreButton()
         e.preventDefault();
