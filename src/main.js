@@ -1,10 +1,11 @@
 import { getImagesByQuery } from './js/pixabay-api';
-import {createGallery, clearGallery, showLoader, hideLoader, showLoadMoreButton, hideLoadMoreButton, loadMore} from "./js/render-functions";
+import {createGallery, clearGallery, showLoader, hideLoader, showLoadMoreButton, hideLoadMoreButton,} from "./js/render-functions";
 
 import iziToast from "izitoast";
 import "izitoast/dist/css/iziToast.min.css";
 
 const form = document.querySelector('form.form')
+const ulGallery = document.querySelector('ul.gallery')
 const loadMoreBtn = document.querySelector('button.load-more')
 
 let inputText
@@ -34,7 +35,16 @@ form.addEventListener('submit', async e => {
             })
                 return
         }
-            const gallery = createGallery(data.hits)
+            const gallery = createGallery(data.hits, true)
+            const PER_PAGE = 15
+            let pageCheck = PER_PAGE * page
+            if (data.totalHits <= PER_PAGE || data.totalHits < Math.ceil(pageCheck)) {
+        hideLoadMoreButton()
+        iziToast.show({
+            message: "We're sorry, but you've reached the end of search results."
+        })
+        
+    }
             showLoadMoreButton()
         } catch (err) {
             console.log(err);
@@ -51,14 +61,23 @@ form.addEventListener('submit', async e => {
 
 loadMoreBtn.addEventListener('click', async e => {
     try {
+        showLoader()
         hideLoadMoreButton()
         e.preventDefault();
         page += 1
         const res = await getImagesByQuery(inputText, page)
         const data = res
-        const gallery = loadMore(data.hits)
-        let pageCheck = 15 * page
-        if (data.totalHits <= 15 || data.totalHits < Math.ceil(pageCheck)) {
+        const gallery = createGallery(data.hits, false)
+        const scrollLength = ulGallery.getBoundingClientRect()
+console.log(scrollLength);
+
+        window.scrollBy({
+        top: scrollLength.bottom / 3.7,
+        behavior: "smooth"
+        })
+        const PER_PAGE = 15
+        let pageCheck = PER_PAGE * page
+        if (data.totalHits <= PER_PAGE || data.totalHits < Math.ceil(pageCheck)) {
         iziToast.show({
             message: "We're sorry, but you've reached the end of search results."
         })
@@ -73,5 +92,7 @@ loadMoreBtn.addEventListener('click', async e => {
             message: "an error accured while trying to get images"
         })
         hideLoadMoreButton()
+    } finally {
+        hideLoader()
     }
 })
